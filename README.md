@@ -1,8 +1,6 @@
-# awesome-javascript
+## Javascript와 Node.js로 Git을 통해 협업하기
 
-<br>
-
-## Getting Started
+**참고** : [링크](<https://d2.naver.com/helloworld/2564557>)
 
 <br>
 
@@ -16,42 +14,215 @@
 
 <br>
 
-### Install Node, Yarn
+#### Git과 GitHub을 활용한 협업 개발
 
-The project manages the version of node through `nvm`.
+Git : 프로젝트를 진행할 때 소스 코드의 버전 관리를 효율적으로 처리할 수 있게 설계된 도구
 
-```
-$ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
-$ command -v nvm
-$ nvm install 10.15.0
-$ which node
-$ npm install -g yarn
-```
+GitHub : Git의 원격 저장소를 생성하고 관리할 수 있는 기능 제공함. 이슈와 pull request를 중심으로 요구사항을 관리
 
-In the project root as follows are performed through the `.nvmrc`
+<br>
+
+Git 저장소 생성
 
 ```
-$ nvm use
-...
+$ mkdir awesome-javascript
+$ cd awesome-javascript
+$ git init
 ```
 
 <br>
 
-## Yarn CLIs
-
-<br>
-
-### Install project
+GitHub 계정에 같은 이름의 저장소를 생성한 후, `git remote` 명령어를 통해 원격 저장소 추가
 
 ```
-$ nvm use
-$ yarn install
+$ git remote add origin 'Github 주소'
 ```
 
 <br>
 
-### Test
+#### GitHub에 이슈 등록하기
+
+------
+
+***이슈는 왜 등록하는거죠?***
+
+코드 작성하기에 앞서, 요구사항이나 해결할 문제를 명확하게 정의하는 것이 중요
+
+GitHub의 이슈 관리 기능을 활용하면 협업하는 동료와 쉽게 공유가 가능함
+
+<br>
+
+GitHub 저장소의 `Issues 탭에서 New issue를 클릭`해서 이슈를 작성할 수 있음
+
+<br>
+
+이슈와 pull request 요청에 작성하는 글의 형식을 템플릿으로 관리할 수 있음
+
+(템플릿은 마크다운 형식)
+
+<br>
+
+##### 숨긴 폴더인 .github 폴더에서 이슈 템플릿과 pull request 템플릿을 관리하는 방법
+
+> devops/github-templates 브랜치에 템플릿 파일을 생성하고 github에 푸시하자
 
 ```
-$ yarn test
+$ git checkout -b devops/github-templates
+$ mkdir .github
+$ touch .github/ISSUE_TEMPLATE.md # Create issue template
+$ touch .github/PULL_REQUEST_TEMPLATE.md # Create pull request template
+$ git add .
+$ git commit -m ':memo: Add GitHub Templates'
+$ git push -u origin devops/github-templates
 ```
+
+<br>
+
+<br>
+
+#### Node.js와 Yarn으로 개발 환경 설정하기
+
+------
+
+오늘날 javascript는 애플리케이션 개발에 많이 사용되고 있다.
+
+이때 git을 활용한 협업 환경뿐만 아니라 코드 검증, 테스트, 빌드, 배포 등의 과정에서 만나는 문제를 해결할 수 있는 개발 환경도 설정해야 한다.
+
+> 이때 많이 사용하는 것이 Node.js와 npm, yarn
+
+<br>
+
+**Node.js와 npm** : JavaScript가 거대한 오픈소스 생태계를 확보하는 데 결정적인 역할을 함
+
+<br>
+
+**Node.js**는 Google이 V8 엔진으로 만든 Javascript 런타임 환경으로 오늘날 상당히 많이 쓰이는 중!
+
+**npm**은 Node.js를 설치할 때 포함되는데, 패키지를 프로젝트에 추가할 수 있도록 다양한 명령을 제공하는 패키지 관리 도구라고 보면 된다.
+
+**yarn**은 페이스북이 개발한 패키지 매니저로, 규모가 커지는 프로젝트에서 npm을 사용하다가 보안, 빌드 성능 문제를 겪는 문제를 해결하기 위해 탄생함
+
+<br>
+
+Node.js 설치 후, yarn을 npm 명령어를 통해 전역으로 설치하자
+
+```
+$ npm install yarn -g
+```
+
+<br>
+
+#### 프로젝트 생성
+
+------
+
+`yarn init` 명령어 실행
+
+프로젝트 기본 정보를 입력하면 새로운 프로젝트가 생성됨
+
+<br>
+
+pakage.json 파일이 생성된 것을 확인할 수 있다.
+
+```json
+{
+  "name": "awesome-javascript",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/kim6394/awesome-javascript.git",
+  "author": "gyuseok <gyuseok6394@gmail.com>",
+  "license": "MIT"
+}
+```
+
+이 파일은 프로젝트의 모든 정보를 담고 있다.
+
+이 파일에서 가장 중요한 속성은 `dependencies`로, **프로젝트와 패키지 간의 의존성을 관리하는 속성**이다.
+
+yarn의 cli 명령어로 패키지를 설치하면 package.json 파일의 dependencies 속성이 자동으로 변경됨
+
+node-fetch 모듈을 설치해보자
+
+```
+$ yarn add node-fetch
+```
+
+pakage.json안에 아래와 같은 내용이 추가된다.
+
+```
+"dependencies": {
+    "node-fetch": "^2.6.0"
+}
+```
+
+<br>
+
+***추가로 생성된 yarn.lock 파일은 뭔가요?***
+
+앱을 개발하는 도중 혹은 배포할 때 프로젝트에서 사용하는 패키지가 업데이트 되는 경우가 있다. 또한 협업하는 동료들마다 다른 버전의 패키지가 설치될 수도 있다.
+
+yarn은 모든 시스템에서 패키지 버전을 일관되게 관리하기 위해 `yarn.lock` 파일을 프로젝트 최상위 폴더에 자동으로 생성함.
+
+(사용자는 이 파일을 직접 수정하면 안됨. 오로지 cli 명령어를 사용해 관리해야한다!)
+
+<br>
+
+#### 프로젝트 공유
+
+현재 프로젝트는 Git의 원격 저장소에 반영해요 협업하는 동료와 공유가 가능하다.
+
+프로젝트에 생성된 `pakage.json`과 `yarn.lock` 파일도 원격 저장소에서 관리해야 협업하는 동료들과 애플리케이션을 안정적으로 운영하는 것이 가능해짐
+
+<br>
+
+원격 저장소에 공유 시, 모듈이 설치되는 `node-_modules` 폴더는 제외시켜야 한다. 폴더의 용량도 크고, 어차피 **yarn.lock 파일을 통해 동기화 되기 때문**에 따로 git 저장소에서 관리할 필요가 없음
+
+따라서, 해당 폴더를 .gitignore 파일에 추가해 git 관리 대상에서 제외시키자
+
+```
+$ echo "node_modules/" > .gitignore
+```
+
+<br>
+
+<br>
+
+##### 이슈 해결 관련 브랜치 생성 & 프로젝트 push
+
+> 이번엔 이슈 해결과 관련된 브랜치를 생성하고, 프로젝트를 github에 푸시해보자
+
+```
+$ git add .
+$ git checkout -b issue/1
+$ git commit -m 'Create project with Yarn'
+$ git push -u origin issue/1
+```
+
+<br>
+
+푸시가 완려되면, GitHub 저장소에 `pull request`가 생성된 것을 확인할 수 있다.
+
+pull request는 **작성한 코드를 master 브랜치에 병합하기 위해 협업하는 동료들에게 코드 리뷰를 요청하는 작업**임
+
+Pull requests 탭에서 New pull request 버튼을 클릭해 pull request를 생성할 수 있다
+
+<br>
+
+##### pull request시 주의할 점
+
+리뷰를 하는 사람에게 충분한 정보를 제공해야 함
+
+새로운 기능을 추가했으면, 기능을 사용하기 위한 재현 시나리오와 테스트 시나리오를 추가하는 것이 좋음.
+
+개발 환경이 변경되었다면 변경 내역도 반드시 포함하자
+
+<br>
+
+#### Jest로 테스트 환경 설정
+
+실제로 프로젝트를 진행하면, 활용되는 Javascript 구현 코드가 만들어질 것이고 이를 검증하는 테스트 환경이 필요하게 된다.
+
+Javascript 테스트 도구로는 jest를 많이 사용한다.
+
+
+
