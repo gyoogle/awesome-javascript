@@ -478,3 +478,27 @@ script:
 
 
 
+
+다시 돌아와서, 리뷰어가 테스트를 실패한 이유는 access token 값이 전달되지 못했기 때문이다.
+
+환경 변수를 관리하기 위해선 Git 저장소에서 설정 정보를 관리하고, 값의 유효성을 검증하는 것이 좋다.
+
+(보안 문제가 있을 때는 다른 방법 강구)
+
+
+
+`dotenv과 joi 모듈`을 사용하면, .env 할 일에 원하는 값을 등록하고 유효성 검증을 할 수 있다.
+
+프로젝트에 .env 파일을 생성하고, access token 값을 등록해두자
+
+
+
+이제 yarn으로 두 모듈을 설치한다.
+
+```
+$ yarn add dotenv joi
+$ git add .
+$ git commit -m 'Integration with dotenv and joi to manage config properties'
+$ git push
+```
+

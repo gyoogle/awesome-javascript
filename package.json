@@ -9,7 +9,12 @@
     "test": "jest"
   },
   "dependencies": {
+<<<<<<< HEAD
     "axios": "^0.19.0",
+=======
+    "dotenv": "^8.0.0",
+    "joi": "^14.3.1",
+>>>>>>> issue/1
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
