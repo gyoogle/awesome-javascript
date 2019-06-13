@@ -476,7 +476,7 @@ script:
  - yarn test
 ```
 
-
+<br>
 
 
 다시 돌아와서, 리뷰어가 테스트를 실패한 이유는 access token 값이 전달되지 못했기 때문이다.
@@ -485,13 +485,13 @@ script:
 
 (보안 문제가 있을 때는 다른 방법 강구)
 
-
+<br>
 
 `dotenv과 joi 모듈`을 사용하면, .env 할 일에 원하는 값을 등록하고 유효성 검증을 할 수 있다.
 
 프로젝트에 .env 파일을 생성하고, access token 값을 등록해두자
 
-
+<br>
 
 이제 yarn으로 두 모듈을 설치한다.
 
@@ -502,3 +502,77 @@ $ git commit -m 'Integration with dotenv and joi to manage config properties'
 $ git push
 ```
 
+이제 Travis CI로 자동 테스트 결과를 확인할 수 있다.
+
+<br>
+
+<br>
+
+#### Node.js 버전 유지시키기
+
+---
+
+개발자들간의 Node.js 버전이 달라서 문제가 발생할 수도 있다.
+
+애플리케이션의 서비스를 안정적으로 관리하기 위해서는 개발자의 로컬 시스템, CI 서버, 빌드 서버의 Node.js 버전을 일관적으로 유지하는 것이 중요하다.
+
+<br>
+
+`package.json`에서 engines 속성, nvm을 활용해 버전을 일관되게 유지해보자
+
+```
+"engines": {
+    "node": ">=10.15.3",
+ },
+```
+
+<br>
+
+.nvmrc 파일 추가 후, nvm use 명령어를 실행하면 engines 속성에 설정한 Node.js의 버전을 사용한다.
+
+<br>
+
+```
+$ echo "10.15.3" > .nvmrc
+$ git add .
+$ nvm use
+Found '/Users/user/github/awesome-javascript/.nvmrc' with version <10.15.3>  
+Now using node v10.15.3 (npm v6.4.1)  
+...
+$ git commit -m 'Add .nvmrc to maintain the same Node.js LTS version'
+```
+
+<br>
+
+<br>
+
+<br>
+
+
+
+지금까지 알아본 점
+
+- Git과 GitHub을 활용해 협업 공간을 구성
+- Node.js 기반 개발 환경과 테스트 환경 설정
+- 개발 환경을 GitHub에 공유하고 리뷰하면서 발생 문제를 해결시켜나감
+
+<br>
+
+지속적인 코드 리뷰를 하기 위해 자동화를 시키자. 이에 사용하기 좋은 것들
+
+- ESLint로 코드 컨벤션 검증
+- Jest로 테스트 자동화
+- Codecov로 코드 커버리지 점검
+- GitHub의 webhook api로 코드 리뷰 요청
+
+<br>
+
+자동화를 시켜놓으면, 개발자들은 코드 의도를 알 수 있는 commit message, commit range만 신경 쓰면 된다.
+
+<br>
+
+협업하며 개발하는 과정에는 코드 작성 후 pull request를 생성하여 병합까지 많은 검증이 필요하다. 
+
+테스트 코드는 이 과정에서 예상치 못한 문제가 발생할 확률을 줄여주며, 구현 코드 의도를 효과적으로 전달할 수 있다.
+
+또한 리뷰 시, 코드 컨벤션 검증뿐만 아니라 비즈니스 로직의 발생 문제도 고민이 가능하다.
