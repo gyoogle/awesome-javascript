@@ -226,3 +226,153 @@ Javascript 테스트 도구로는 jest를 많이 사용한다.
 
 
 
+GitHub의 REST API v3을 활용해 특정 GitHub 사용자 정보를 가져오는 코드를 작성해보고, 테스트 환경 설정 방법에 대해 알아보자
+
+
+
+##### 테스트 코드 작성
+
+구현 코드 작성 이전, 구현하려는 기능의 의도를 테스트 코드로 표현해보자
+
+테스트 코드 저장 폴더 : `__test__`
+
+구현 코드 저장 폴더 : `lib`
+
+테스트 코드 : `github.test.js`
+
+
+
+```
+$ mkdir __tests__ lib
+$ touch __tests__/github.test.js
+```
+
+
+
+github.test.js에 테스트 코드를 작성해보자
+
+내 GitHub `kim6394` 계정의 사용자 정보를 가져왔는지 확인하는 코드다. 
+
+```javascript
+const GitHub = require('../lib/github')
+
+describe('Integration with GitHub API', () => {
+    let github
+
+    beforeAll ( () => {
+        github = new GitHub({
+            accessToken: process.env.ACCESS_TOKEN,
+            baseURL: 'https://api.github.com',
+        })
+    })
+
+    test('Get a user', async () => {
+        const res = await github.getUser('kim6394')
+        expect(res).toEqual (
+            expect.objectContaining({
+                login: 'kim6394',
+            })
+        )
+    })
+})
+```
+
+
+
+##### Jest 설치
+
+yarn에서 테스트 코드를 실행할 때는 `yarn test`
+
+먼저 설치를 진행하자
+
+```
+$ yarn add jest --dev
+```
+
+******
+
+***`--dev` 속성은 뭔가요?***
+
+> 설치할 때 이처럼 작성하면, `devDependencies`  속성에 패키지를 추가시킨다. 이 옵션으로 설치된 패키지는, 앱이 실행되는 런타임 환경에는 영향을 미치지 않는다.
+
+
+
+테스트 명령을 위한 script 속성을 pakage.json에 설정하자
+
+```json
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "jest": "^24.8.0"
+  }
+```
+
+
+
+##### 구현 코드 작성
+
+아직 구현 코드를 작성하지 않았기 때문에 테스트 실행이 되지 않을 것이다.
+
+lib 폴더에 구현 코드를 작성해보자
+
+`lib/github.js`
+
+```javascript
+const fetch = require('node-fetch')
+
+class GitHub {
+    constructor({ accessToken, baseURL }) {
+        this.accessToken = accessToken
+        this.baseURL = baseURL
+    }
+
+    async getUser(username) {
+        if(!this.accessToken) {
+            throw new Error('accessToken is required.')
+        }
+
+        return fetch(`${this.baseURL}/users/${username}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `token ${this.accessToken}`,
+                'Content-Type' : 'application/json',
+            },
+        }).then(res => res.json())
+    }
+}
+
+module.exports = GitHub
+```
+
+
+
+이제 GitHub 홈페이지에서 access token을 생성해서 테스트해보자
+
+토큰은 사용자마다 다르므로 자신이 생성한 토큰 값으로 입력한다
+
+```
+$ ACCESS_TOKEN=29ed3249e4aebc0d5cfc39e84a2081ad6b24a57c yarn test
+```
+
+아래와 같이 테스트가 정상적으로 작동되어 출력되는 것을 확인할 수 있을 것이다!
+
+```
+yarn run v1.10.1
+$ jest
+ PASS  __tests__/github.test.js
+  Integration with GitHub API
+    √ Get a user (947ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        3.758s
+Ran all test suites.
+Done in 5.30s.
+```
+
