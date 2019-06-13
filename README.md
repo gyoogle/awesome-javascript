@@ -1,6 +1,6 @@
 ## Javascript와 Node.js로 Git을 통해 협업하기
 
-
+<br>
 
 협업 프로젝트를 하기 위해서는 Git을 잘 써야한다. 
 
@@ -8,9 +8,9 @@
 
 아직 제대로 활용해보지 못했기 때문에 이번에 정리해보자!
 
+<br>
 
-
-
+<br>
 
 **참고** : 네이버D2 [링크](<https://d2.naver.com/helloworld/2564557>)
 
@@ -236,11 +236,11 @@ Pull requests 탭에서 New pull request 버튼을 클릭해 pull request를 생
 
 Javascript 테스트 도구로는 jest를 많이 사용한다.
 
-
+<br>
 
 GitHub의 REST API v3을 활용해 특정 GitHub 사용자 정보를 가져오는 코드를 작성해보고, 테스트 환경 설정 방법에 대해 알아보자
 
-
+<br>
 
 ##### 테스트 코드 작성
 
@@ -252,14 +252,14 @@ GitHub의 REST API v3을 활용해 특정 GitHub 사용자 정보를 가져오�
 
 테스트 코드 : `github.test.js`
 
-
+<br>
 
 ```
 $ mkdir __tests__ lib
 $ touch __tests__/github.test.js
 ```
 
-
+<br>
 
 github.test.js에 테스트 코드를 작성해보자
 
@@ -289,7 +289,7 @@ describe('Integration with GitHub API', () => {
 })
 ```
 
-
+<br>
 
 ##### Jest 설치
 
@@ -307,7 +307,7 @@ $ yarn add jest --dev
 
 > 설치할 때 이처럼 작성하면, `devDependencies`  속성에 패키지를 추가시킨다. 이 옵션으로 설치된 패키지는, 앱이 실행되는 런타임 환경에는 영향을 미치지 않는다.
 
-
+<br>
 
 테스트 명령을 위한 script 속성을 pakage.json에 설정하자
 
@@ -324,7 +324,7 @@ $ yarn add jest --dev
   }
 ```
 
-
+<br>
 
 ##### 구현 코드 작성
 
@@ -361,7 +361,7 @@ class GitHub {
 module.exports = GitHub
 ```
 
-
+<br>
 
 이제 GitHub 홈페이지에서 access token을 생성해서 테스트해보자
 
@@ -388,9 +388,9 @@ Ran all test suites.
 Done in 5.30s.
 ```
 
+<br>
 
-
-
+<br>
 
 #### Travis CI를 활용한 리뷰 환경 개선
 
@@ -400,11 +400,11 @@ Done in 5.30s.
 
 지금까지 진행한 과정을 확인한 리뷰어가 다음과 같이 답을 보내왔다.
 
-
+<br>
 
 >README.md를 참고해 테스트 명령을 실행했지만 실패했습니다..
 
-
+<br>
 
 무슨 문제일까? 내 로컬 환경에서는 분명 테스트 케이스를 통해 테스트 성공을 확인할 수 있었다. 리뷰어가 보낸 문제는, 다른 환경에서 테스트 실패로 인한 문제다.
 
@@ -412,7 +412,7 @@ Done in 5.30s.
 
 CI 도구가 자동으로 실행하도록 프로젝트 리뷰 방법을 개선시켜보자
 
-
+<br>
 
 ##### Travis CI로 테스트 자동화
 
@@ -420,22 +420,61 @@ CI 도구가 자동으로 실행하도록 프로젝트 리뷰 방법을 개선�
 
 (CI 도구 빌드 프로세스에 정의한 작업이 성공해야만 master 브랜치에 소스코드가 병합되도록 제약 조건을 주는 것)
 
-
+<br>
 
 대표적인 CI 도구는 Jenkins이지만, CI 서버 구축 운영에 비용이 든다.
 
-
+<br>
 
 Travis CI는 아래와 같은 작업을 위임한다
 
 - ESLint를 통한 코드 컨벤션 검증
 - Jest를 통한 테스트 자동화
 
-
+<br>
 
 Travis CI의 연동과 설정이 완료되면, pull request를 요청한 소스코드가 Travis CI를 거치도록 GitHub 저장소의 Branch protection rules 항목을 설정한다.
 
 이를 설정해두면, 작성해둔 구현 코드와 테스트 코드로 pull request를 요청했을 때 Travis CI 서버에서 자동으로 테스트를 실행할 수 있게 된다.
+
+<br>
+
+##### GitHub-Travis CI 연동
+
+https://travis-ci.org/에서 GitHub Login
+
+https://travis-ci.org/account/repositories에서 연결할 repository 허용
+
+프로젝트에 .travis.yml 설정 파일 추가
+
+<br>
+
+`.travis.yml`
+
+```yml
+---
+language: node_js
+node_js:
+  - 10.15.0
+cache:
+  yarn: true
+  directories:
+  - node_modules
+
+env:
+  global:
+    - PATH=$HOME/.yarn/bin:$PATH
+
+services:
+  - mongodb
+
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+
+script:
+ - yarn install
+ - yarn test
+```
 
 
 
