@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "nvm": "^0.0.4"
   },
   "devDependencies": {
