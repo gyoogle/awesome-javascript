@@ -212,7 +212,7 @@ $ git push -u origin issue/1
 
 <br>
 
-푸시가 완려되면, GitHub 저장소에 `pull request`가 생성된 것을 확인할 수 있다.
+푸시가 완료되면, GitHub 저장소에 `pull request`가 생성된 것을 확인할 수 있다.
 
 pull request는 **작성한 코드를 master 브랜치에 병합하기 위해 협업하는 동료들에게 코드 리뷰를 요청하는 작업**임
 
